@@ -30,10 +30,14 @@ class Game:
         if not self.board.drop_piece(column, self.current_agent.color):
             print("Column is full. Try again.")
             return False
+
         if self.board.is_winner(self.current_agent.color):
+            coords = self.board.find_winner_coords(self.current_agent.color)
+            print(self.board.render_board(highlight=coords))
             print(f"{self.current_agent.color} wins!")
             self.is_over = True
         elif self.board.is_full():
+            print(self.board)
             print("The game is a draw.")
             self.is_over = True
         else:
