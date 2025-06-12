@@ -49,28 +49,32 @@ class Board:
                 return False
         return True
 
-    def is_winner(self, player):
+    def find_winner_coords(self, player):
+        """Return list of coordinates comprising a winning sequence."""
         # horizontal
         for row in range(self.ROWS):
             for col in range(self.COLUMNS - 3):
                 if all(self.game_state[row][col + i] == player for i in range(4)):
-                    return True
+                    return [(col + i, row) for i in range(4)]
         # vertical
         for col in range(self.COLUMNS):
             for row in range(self.ROWS - 3):
                 if all(self.game_state[row + i][col] == player for i in range(4)):
-                    return True
+                    return [(col, row + i) for i in range(4)]
         # diagonal down-right
         for row in range(self.ROWS - 3):
             for col in range(self.COLUMNS - 3):
                 if all(self.game_state[row + i][col + i] == player for i in range(4)):
-                    return True
+                    return [(col + i, row + i) for i in range(4)]
         # diagonal up-right
         for row in range(3, self.ROWS):
             for col in range(self.COLUMNS - 3):
                 if all(self.game_state[row - i][col + i] == player for i in range(4)):
-                    return True
-        return False
+                    return [(col + i, row - i) for i in range(4)]
+        return []
+
+    def is_winner(self, player):
+        return bool(self.find_winner_coords(player))
 
     def check_win_direction(self, col, row, delta_col, delta_row, player):
         for i in range(4):
@@ -83,11 +87,23 @@ class Board:
         return True
 
     def __str__(self):
+        return self.render_board()
+
+    def render_board(self, highlight=None):
+        """Return a string representation of the board.
+
+        If ``highlight`` is provided, cells whose ``(col, row)`` tuples are in
+        the iterable will be printed in yellow text.
+        """
+        highlight_set = set(highlight or [])
         board_str = ""
         for row in range(self.ROWS):
             for col in range(self.COLUMNS):
                 cell = self.get_cell(col, row)
-                cell = cell[0] if cell else ''
-                board_str += f"{cell or '.'} "
+                char = cell[0] if cell else '.'
+                if (col, row) in highlight_set and cell:
+                    board_str += f"\x1b[33m{char}\x1b[0m "
+                else:
+                    board_str += f"{char} "
             board_str += "\n"
         return board_str
