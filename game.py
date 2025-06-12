@@ -18,10 +18,18 @@ class Game:
 
     def do_turn(self):
         print(self.board)
-        column = self.current_agent.take_turn(self.board.get_game_state())
-        if not self.board.set_cell(column, self.board.get_next_row(column), self.current_agent.color):
-            print("Invalid move. Try again.")
+        try:
+            column = int(self.current_agent.take_turn(self.board.get_game_state()))
+        except ValueError:
+            print("Invalid input. Please enter a column number.")
             return False
+        if not (0 <= column < self.board.COLUMNS):
+            print("Invalid column. Try again.")
+            return False
+        if not self.board.drop_piece(column, self.current_agent.color):
+            print("Column is full. Try again.")
+            return False
+        print(self.board)
         if self.board.is_winner(self.current_agent.color):
             print(f"{self.current_agent.color} wins!")
             self.is_over = True
@@ -31,3 +39,6 @@ class Game:
         else:
             self.switch_agents()
         return True
+
+    def switch_agents(self):
+        self.current_agent = self.agent2 if self.current_agent == self.agent1 else self.agent1
