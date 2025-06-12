@@ -87,6 +87,7 @@ class Board:
         for row in range(self.ROWS):
             for col in range(self.COLUMNS):
                 cell = self.get_cell(col, row)
+                cell = cell[0] if cell else ''
                 board_str += f"{cell or '.'} "
             board_str += "\n"
         return board_str

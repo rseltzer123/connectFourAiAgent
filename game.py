@@ -19,7 +19,8 @@ class Game:
     def do_turn(self):
         print(self.board)
         try:
-            column = int(self.current_agent.take_turn(self.board.get_game_state()))
+            column = int(self.current_agent.take_turn(
+                self.board.get_game_state())) - 1
         except ValueError:
             print("Invalid input. Please enter a column number.")
             return False
@@ -29,7 +30,6 @@ class Game:
         if not self.board.drop_piece(column, self.current_agent.color):
             print("Column is full. Try again.")
             return False
-        print(self.board)
         if self.board.is_winner(self.current_agent.color):
             print(f"{self.current_agent.color} wins!")
             self.is_over = True
