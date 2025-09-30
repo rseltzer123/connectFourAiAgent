@@ -1,10 +1,11 @@
 from game import Game
-from agent import Agent
+from agents.human_agent import HumanAgent
+from agents.random_agent import RandomAgent
 
 
 def main():
-    agent1 = Agent(color='red', player_id=1)
-    agent2 = Agent(color='black', player_id=2)
+    agent1 = HumanAgent(color='red', player_id=1)
+    agent2 = RandomAgent(color='black', player_id=2)
 
     game = Game(agent1, agent2)
 

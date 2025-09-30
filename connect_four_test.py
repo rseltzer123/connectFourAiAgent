@@ -13,7 +13,7 @@ def has_winner(state, player):
         for c in range(COLUMNS - 3):
             if all(state[r][c + i] == player for i in range(4)):
                 return True
-    # vertical
+    # vertical``
     for c in range(COLUMNS):
         for r in range(ROWS - 3):
             if all(state[r + i][c] == player for i in range(4)):
@@ -48,7 +48,8 @@ for case in range(100):
     red_win = has_winner(state, "red")
     black_win = has_winner(state, "black")
     case_id = f"case_{case}_red_{int(red_win)}_black_{int(black_win)}"
-    TEST_CASES.append(pytest.param(case, state, red_win, black_win, id=case_id))
+    TEST_CASES.append(pytest.param(
+        case, state, red_win, black_win, id=case_id))
 
 
 def set_board_state(board: Board, state):
@@ -65,3 +66,6 @@ def test_full_board_states(case_num, state, exp_red, exp_black):
     assert board.is_full(), f"Case {case_num} board should be full"
     assert board.is_winner("red") == exp_red
     assert board.is_winner("black") == exp_black
+
+
+print("All tests passed for full board states.")

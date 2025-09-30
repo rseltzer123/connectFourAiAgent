@@ -11,6 +11,11 @@ class Board:
             ['' for _ in range(self.COLUMNS)] for _ in range(self.ROWS)
         ]
 
+    def set_game_state(self, game_state):
+        if not self.is_valid_game_state(game_state):
+            raise ValueError("Invalid game state")
+        self.game_state = game_state
+
     def get_game_state(self):
         return self.game_state
 
@@ -107,3 +112,24 @@ class Board:
                     board_str += f"{char} "
             board_str += "\n"
         return board_str
+
+    def is_valid_game_state(self, game_state):
+        # Check dimensions
+        if len(game_state) != self.ROWS:
+            return False
+        for row in game_state:
+            if len(row) != self.COLUMNS:
+                return False
+            for cell in row:
+                if cell not in ("red", "black", ""):
+                    return False
+        # Check for floating pieces
+        for col in range(self.COLUMNS):
+            found_empty = False
+            for row in range(self.ROWS - 1, -1, -1):
+                if game_state[row][col] == "":
+                    found_empty = True
+                elif found_empty:
+                    # Found a piece above an empty cell
+                    return False
+        return True
